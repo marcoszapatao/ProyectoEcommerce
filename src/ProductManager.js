@@ -3,9 +3,10 @@ Autor: Marcos Zapata Otárola
 Fecha: 15-09-2023
 */
 
-const fs = require('fs');
+//const fs = require('fs');
+import fs from 'fs';
 
-class ProductManager{
+export default class ProductManager{
 
     constructor(path){
         this.path= path;
@@ -101,4 +102,14 @@ class ProductManager{
  
  }
 
- 
+//  const productManager = new ProductManager('Products.json');
+//  productManager.addProduct("Pantalon", "Pantalon de manga corta", 100, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/pantalon_manga_corta-512", "123", 100);
+//  productManager.addProduct("Camisa", "Camisa de manga larga", 200, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/camisa_manga_larga-512", "456", 100);
+//  productManager.addProduct("Zapatillas", "Zapatillas de cuero", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "789", 100);
+//  productManager.addProduct("Zapatos", "Zapatos de Cuero", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "654", 100);
+//  productManager.addProduct("Hoddie", "Hoddie TNF", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "321", 100);
+//  productManager.addProduct("Buzo", "Pantalon jogger", 100, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/pantalon_manga_corta-512", "143", 50);
+//  productManager.addProduct("Polera", "Polera manga larga", 200, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/camisa_manga_larga-512", "444", 50);
+//  productManager.addProduct("Zapatillas Nike", "Zapatillas blancas", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "540", 50);
+//  productManager.addProduct("Cinturon", "Cinturon de Cuero", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "876", 50);
+//  productManager.addProduct("Calcetin", "Calcetin TNF", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "999", 50);

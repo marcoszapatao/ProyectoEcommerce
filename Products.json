@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "title": "Pantalon",
+    "description": "Pantalon de manga corta",
+    "price": 100,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/pantalon_manga_corta-512",
+    "code": "123",
+    "stock": 100
+  },
+  {
+    "id": 2,
+    "title": "Camisa",
+    "description": "Camisa de manga larga",
+    "price": 200,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/camisa_manga_larga-512",
+    "code": "456",
+    "stock": 100
+  },
+  {
+    "id": 3,
+    "title": "Zapatillas",
+    "description": "Zapatillas de cuero",
+    "price": 300,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512",
+    "code": "789",
+    "stock": 100
+  },
+  {
+    "id": 4,
+    "title": "Zapatos",
+    "description": "Zapatos de Cuero",
+    "price": 300,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512",
+    "code": "654",
+    "stock": 100
+  },
+  {
+    "id": 5,
+    "title": "Hoddie",
+    "description": "Hoddie TNF",
+    "price": 300,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512",
+    "code": "321",
+    "stock": 100
+  },
+  {
+    "id": 6,
+    "title": "Buzo",
+    "description": "Pantalon jogger",
+    "price": 100,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/pantalon_manga_corta-512",
+    "code": "143",
+    "stock": 50
+  },
+  {
+    "id": 7,
+    "title": "Polera",
+    "description": "Polera manga larga",
+    "price": 200,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/camisa_manga_larga-512",
+    "code": "444",
+    "stock": 50
+  },
+  {
+    "id": 8,
+    "title": "Zapatillas Nike",
+    "description": "Zapatillas blancas",
+    "price": 300,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512",
+    "code": "540",
+    "stock": 50
+  },
+  {
+    "id": 9,
+    "title": "Cinturon",
+    "description": "Cinturon de Cuero",
+    "price": 300,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512",
+    "code": "876",
+    "stock": 50
+  },
+  {
+    "id": 10,
+    "title": "Calcetin",
+    "description": "Calcetin TNF",
+    "price": 300,
+    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512",
+    "code": "999",
+    "stock": 50
+  }
+]
