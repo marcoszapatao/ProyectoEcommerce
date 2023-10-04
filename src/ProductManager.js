@@ -1,9 +1,7 @@
-/*Entregable Clase Manejo de Archivos
+/*Entregable Proyecto Ecommerce
 Autor: Marcos Zapata Otárola
-Fecha: 15-09-2023
 */
 
-//const fs = require('fs');
 import fs from 'fs';
 
 export default class ProductManager{
@@ -20,9 +18,9 @@ export default class ProductManager{
     }
     
    
-    addProduct(title, description, price, thumbnail, code, stock) {
+    addProduct({ title, description, code, price, stock, category, thumbnails }) {
     
-    if (!title || !description || !price || !thumbnail || !stock || !code) {
+    if (!title || !description || !code || !price || !stock || !category) {      
       console.error("Todos los campos son obligatorios.");
       return;
     }
@@ -37,10 +35,12 @@ export default class ProductManager{
       id: this.productId,
       title,
       description,
-      price,
-      thumbnail,
       code,
-      stock
+      price,
+      stock,
+      category,
+      status: true,  // Por defecto es true
+      thumbnails: thumbnails || []
     };
     this.products.push(product);
     this.writeFile(this.products);
@@ -73,10 +73,11 @@ export default class ProductManager{
   updateProduct(id, updatedProduct) {
     const allProducts = this.getProducts();
     const productIndex = allProducts.findIndex(product => product.id === id);
-    if (productIndex === 'NOT FOUND') {
+    if (productIndex === -1) {
         console.error("Producto no encontrado.");
         return;
     }
+    delete updatedProduct.id;
     const updatedProductId = { id, ...updatedProduct };
     allProducts[productIndex] = updatedProductId;
     this.writeFile(allProducts);
