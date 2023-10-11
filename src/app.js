@@ -36,4 +36,16 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         console.log('Un usuario se desconectó');
     });
+    
+    socket.on('add-product', data => {
+        console.log(data);
+        const newProduct = productManager.addProduct(data);
+        io.emit('product-added', newProduct);
+    });
+
+    socket.on('delete-product', productId => {
+        productManager.deleteProduct(productId);
+        io.emit('product-deleted', productId);
+    });
+
 });

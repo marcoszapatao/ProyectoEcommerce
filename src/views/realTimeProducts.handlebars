@@ -14,12 +14,47 @@
 
 <form id="add-product-form">
     <input type="text" id="title" placeholder="Título">
-    <input type="number" id="price" placeholder="Precio">
+    <input type="text" id="description" placeholder="Descripcion">
+    <input type="text" id="code" placeholder="Codigo">
+    <input type="text" id="price" placeholder="Precio">
+    <input type="text" id="stock" placeholder="Stock">
+    <input type="text" id="category" placeholder="Categoria">
     <button type="submit">Agregar Producto</button>
 </form>
-
 <script src="/socket.io/socket.io.js"></script>
 <script>
+    const socket = io();
+
+    document.getElementById('add-product-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const title = document.getElementById('title').value;
+        const price = document.getElementById('price').value;
+        const description = document.getElementById('description').value;
+        const code = document.getElementById('code').value;
+        const stock = document.getElementById('stock').value;
+        const category = document.getElementById('category').value;        
+        socket.emit('add-product', { title, description, code, price, stock, category});
+    });
+
+    socket.on('product-added', product => {
+        const li = document.createElement('li');
+        li.textContent = `${product.title} - ${product.price}`;
+        document.getElementById('product-list').appendChild(li);
+    });
+
+    document.querySelectorAll('.delete-product').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const productId = e.target.getAttribute('data-id');
+            console.log(productId);
+            socket.emit('delete-product', productId);
+        });
+    });
+
+    socket.on('product-deleted', productId => {
+        const li = document.querySelector(`li[data-id="${productId}"]`);
+        if(li) li.remove();
+    });
 
 
 

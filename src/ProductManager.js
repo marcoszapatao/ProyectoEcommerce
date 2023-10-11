@@ -46,7 +46,7 @@ export default class ProductManager{
     this.writeFile(this.products);
     console.log("Producto con ID: "+ this.productId +" se ha creado correctamente");
     this.productId++;
- 
+    return product;
   }
   
   getProducts() {
@@ -85,8 +85,9 @@ export default class ProductManager{
   }
 
   deleteProduct(id) {
+    const numericId = parseInt(id, 10);
     const allProducts = this.getProducts();
-    const updatedProducts = allProducts.filter(product => product.id !== id);
+    const updatedProducts = allProducts.filter(product => product.id !== numericId);
     if (updatedProducts.length === allProducts.length) {
       console.error("Producto no encontrado.");
       return;
@@ -103,14 +104,4 @@ export default class ProductManager{
  
  }
 
-//  const productManager = new ProductManager('Products.json');
-//  productManager.addProduct("Pantalon", "Pantalon de manga corta", 100, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/pantalon_manga_corta-512", "123", 100);
-//  productManager.addProduct("Camisa", "Camisa de manga larga", 200, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/camisa_manga_larga-512", "456", 100);
-//  productManager.addProduct("Zapatillas", "Zapatillas de cuero", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "789", 100);
-//  productManager.addProduct("Zapatos", "Zapatos de Cuero", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "654", 100);
-//  productManager.addProduct("Hoddie", "Hoddie TNF", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "321", 100);
-//  productManager.addProduct("Buzo", "Pantalon jogger", 100, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/pantalon_manga_corta-512", "143", 50);
-//  productManager.addProduct("Polera", "Polera manga larga", 200, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/camisa_manga_larga-512", "444", 50);
-//  productManager.addProduct("Zapatillas Nike", "Zapatillas blancas", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "540", 50);
-//  productManager.addProduct("Cinturon", "Cinturon de Cuero", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "876", 50);
-//  productManager.addProduct("Calcetin", "Calcetin TNF", 300, "https://cdn3.iconfinder.com/data/icons/fashion-and-clothing-3/512/zapatillas_cuero-512", "999", 50);
+
