@@ -5,6 +5,16 @@ import ProductManager from '../ProductManager.js';
 const productManager = new ProductManager('Products.json');
 
 router.get('/', (req, res) => { 
+    const products = productManager.getProducts();
+    res.render('home', { products });
+});
+
+router.get('/realtimeproducts', (req, res) => {
+    const products = productManager.getProducts();
+    res.render('realTimeProducts', { products });
+});
+
+router.get('/', (req, res) => { 
     const limit = req.query.limit;
     let products = productManager.getProducts();
     if (limit && !isNaN(limit)) {
@@ -42,6 +52,7 @@ router.delete('/:pid', (req, res) => {
     productManager.deleteProduct(productId);
     res.json({ message: `Producto con ID: ${productId} ha sido eliminado.` });
 });
+
 
 
 export default router;
