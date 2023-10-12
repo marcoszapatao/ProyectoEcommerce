@@ -29,6 +29,11 @@ const cartManager = new CartManager('Carts.json');
 app.use('/products', productRoutes);
 app.use('/carts', cartRoutes);
 
+//Pagina de Inicio
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Mi Página de Inicio' }); 
+});
+
 //Socket
 const io = new Server(server);
 io.on('connection', socket => {
