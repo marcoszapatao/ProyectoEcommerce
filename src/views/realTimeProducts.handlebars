@@ -8,7 +8,7 @@
 
 <ul id="product-list">
     {{#each products}}
-        <li data-id="{{this.id}}">{{this.title}} - {{this.price}} - <button class="delete-product" data-id="{{this.id}}">Eliminar</button></li>
+        <li data-id="{{this._id}}">{{this.title}} - {{this.price}} - <button class="delete-product" data-id="{{this._id}}">Eliminar</button></li>
     {{/each}}
 </ul>
 
