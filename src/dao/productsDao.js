@@ -30,6 +30,14 @@ import Product from './models/products.model.js';
     return await Product.find({}).lean();
   }
 
+  // async getAllProductsPag({  limit = 10, page = 1 }) {
+  //   try {
+  //     return await Product.find({}).lean().paginate({}, { page, limit, lean:true });
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
   async getProductById(id) {
     try {
       const product = await Product.findById(id);

@@ -40,5 +40,48 @@ router.post('/:cid/product/:pid', async (req, res) => {
     }
 });
 
+
+router.delete('/:cid/product/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
+    const result = await cartsDao.removeProductFromCart(cid, pid);
+    if (result) {
+        res.json({ message: "Producto eliminado del carrito correctamente" });
+    } else {
+        res.status(404).json({ error: "No se pudo eliminar el producto del carrito" });
+    }
+});
+
+router.put('/:cid', async (req, res) => {
+    const cartId = req.params.cid;
+    const productsToUpdate = req.body;
+    const result = await cartsDao.updateCartProducts(cartId, productsToUpdate);
+    if (result) {
+        res.json({ message: "Carrito actualizado correctamente" });
+    } else {
+        res.status(404).json({ error: "No se pudo actualizar el carrito" });
+    }
+});
+
+router.put('/:cid/product/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+    const result = await cartsDao.updateProductQuantityInCart(cid, pid, quantity);
+    if (result) {
+        res.json({ message: "Cantidad del producto actualizada correctamente en el carrito" });
+    } else {
+        res.status(404).json({ error: "No se pudo actualizar la cantidad del producto en el carrito" });
+    }
+});
+
+router.delete('/:cid', async (req, res) => {
+    const { cid } = req.params;
+    const result = await cartsDao.clearCart(cid);
+    if (result) {
+        res.json({ message: "Todos los productos han sido eliminados del carrito" });
+    } else {
+        res.status(404).json({ error: "No se pudieron eliminar los productos del carrito" });
+    }
+});
+
 export default router;
 

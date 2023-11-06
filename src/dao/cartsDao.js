@@ -80,6 +80,49 @@ class CartsDao {
             return null;
         }
     }
+
+    async updateProductQuantityInCart(cartId, productId, quantity) {
+        try {
+            const cart = await this.getCartById(cartId);
+            if (!cart) {
+                console.error("Carrito no encontrado");
+                return null;
+            }
+            const productIndex = cart.products.findIndex(p => p.product._id.equals(productId));   
+            if (productIndex !== -1) {
+                cart.products[productIndex].quantity = Math.max(quantity, 1);
+            } else {
+                console.error("Producto no encontrado en el carrito");
+                return null;
+            }
+            await cart.save();
+            return cart;
+        } catch (error) {
+            console.error("Error al actualizar la cantidad del producto en el carrito:", error);
+            return null;
+        }
+    }
+
+
+    async updateCartProducts(cartId, productsToUpdate) {
+        try {
+            const cart = await this.getCartById(cartId);
+            if (!cart) {
+                console.error("Carrito no encontrado");
+                return null;
+            }
+            cart.products = productsToUpdate.map(product => ({
+                product: product._id,
+                quantity: product.quantity
+            }));
+            await cart.save();
+            return cart;
+        } catch (error) {
+            console.error("Error al actualizar los productos en el carrito:", error);
+            return null;
+        }
+    }
+
 }
 
 export default new CartsDao();
