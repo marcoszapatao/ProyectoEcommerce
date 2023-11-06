@@ -1,5 +1,7 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose';
 import __dirname from './utils.js';
 //import ProductManager from './dao/fileSystem/ProductManager.js'; 
@@ -12,7 +14,7 @@ import {Server} from 'socket.io';
 
 //Server
 const app = express();
-const mongoURL = 'mongodb://127.0.0.1:27017/'
+const mongoUrl = 'mongodb://127.0.0.1:27017/'
 const mongoDBName = 'ecommerce'
 const server = app.listen(8080,()=>console.log('listening on port 8080'));
 
@@ -25,7 +27,16 @@ app.use(express.static(__dirname+'/public'));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl,
+        dbName: mongoDBName,
+        ttl: 100
+    }),
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false
+}))
 //Instancias
 //const productManager = new ProductManager('Products.json');
 //const cartManager = new CartManager('Carts.json');
@@ -82,7 +93,7 @@ io.on('connection', socket => {
 });
 
 // Conectamos Mongo
-mongoose.connect(mongoURL, { dbName: mongoDBName})
+mongoose.connect(mongoUrl, { dbName: mongoDBName})
     .then(() => {
         console.log('DB connected! 😎 ')
     })
