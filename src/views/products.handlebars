@@ -1,0 +1,86 @@
+<h1>Lista de Productos</h1>
+
+{{#if payload.length}}
+  <ul>
+      {{#each payload}}
+      <li>
+          <h2>{{title}}</h2>
+          <p>Descripción: {{description}}</p>
+          <p>Precio: ${{price}}</p>
+          <button onclick="addToCart('{{_id}}')">Agregar al Carrito</button>
+          <a href="/products/{{_id}}">Ver Más</a>
+      </li>
+      {{/each}}
+  </ul>
+
+  <!-- Paginación -->
+  <div>
+      {{#if hasPrevPage}}
+          <a href="{{prevLink}}">Página Anterior</a>
+      {{/if}}
+      <span>Página {{page}} de {{totalPages}}</span>
+      {{#if hasNextPage}}
+          <a href="{{nextLink}}">Página Siguiente</a>
+      {{/if}}
+  </div>
+{{else}}
+  <p>No se encontraron productos.</p>
+{{/if}}
+
+<script>
+
+
+function addToCart(productId) {
+    let cartId = getCurrentCartId();
+    if (!cartId) {
+        fetch('/carts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No se pudo crear un nuevo carrito.');
+            }
+            return response.json();
+        })
+        .then(newCart => {
+            setCurrentCartId(newCart._id); 
+            return addToCart(productId); 
+        })
+        .catch(error => {
+            console.error('Error al crear un nuevo carrito:', error);
+        });
+    } else {
+        fetch(`/carts/${cartId}/product/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No se pudo añadir el producto al carrito.');
+            }
+            return response.json();
+        })
+        .then(() => {
+            alert("Producto añadido al carrito correctamente.");
+        })
+        .catch(error => {
+            console.error('Error al añadir el producto al carrito:', error);
+        });
+    }
+}
+
+function getCurrentCartId() {
+    return localStorage.getItem('currentCartId');
+}
+
+function setCurrentCartId(cartId) {
+    localStorage.setItem('currentCartId', cartId);
+}
+
+
+</script>

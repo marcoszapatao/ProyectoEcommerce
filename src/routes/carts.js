@@ -9,9 +9,9 @@ router.get('/:cid', async (req, res) => {
     //const cart = cartManager.getCartById(cartId);
     const cart = await cartsDao.getCartById(cartId);
     if (cart) {
-        res.json(cart);
+        res.render('carts', { cart: cart.toObject() });;
     } else {
-        res.status(404).json({ error: 'Carrito no encontrado' });
+        res.status(404).render('error', { error: 'Carrito no encontrado' });
     }
 });
 

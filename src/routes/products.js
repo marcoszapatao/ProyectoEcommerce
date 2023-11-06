@@ -38,7 +38,6 @@ router.get('/', async (req, res) => {
       lean: true
     };
 
-    // Construir los parámetros de la consulta de forma dinámica
     const queryParams = new URLSearchParams();
     queryParams.append('limit', options.limit);
     if (sort) queryParams.append('sort', sort);
@@ -46,13 +45,12 @@ router.get('/', async (req, res) => {
     if (category) queryParams.append('category', category);
     if (available) queryParams.append('available', available);
   
-    // No olvidar añadir el path al recurso
     const path = '/products';
 
     const result = await Product.paginate(filterOptions, options);
     const baseUrl = `${req.protocol}://${req.get('host')}`;
 
-    res.json({
+    res.render('products' ,{
       status: 'success',
       payload: result.docs,
       totalPages: result.totalPages,
@@ -73,7 +71,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:pid', async (req, res) => { 
-    const productId = parseInt(req.params.pid);
+    const productId = req.params.pid;
     //const product = productManager.getProductById(productId);
     const product = await productsDao.getProductById(productId);	
     if (product) {
