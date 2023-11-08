@@ -8,9 +8,11 @@ import __dirname from './utils.js';
 //import CartManager from './dao/fileSystem/CartManager.js'; 
 import productsDao from './dao/productsDao.js';
 import cartsDao from './dao/cartsDao.js';
-import productRoutes from './routes/products.js';
-import cartRoutes from './routes/carts.js';
+import productRoutes from './routes/products.router.js';
+import cartRoutes from './routes/carts.router.js';
+import sessionRouter from './routes/session.router.js';
 import {Server} from 'socket.io';
+
 
 //Server
 const app = express();
@@ -54,7 +56,7 @@ app.use('/carts', (req, res, next) => {
     req.cartsDao = cartsDao;
     next();
 }, cartRoutes);
-
+app.use("/session", sessionRouter)
 //Pagina de Inicio
 app.get('/', (req, res) => {
     res.render('index', { title: 'Mi Página de Inicio' }); 
