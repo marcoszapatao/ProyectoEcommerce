@@ -49,8 +49,8 @@ router.get('/', async (req, res) => {
 
     const result = await Product.paginate(filterOptions, options);
     const baseUrl = `${req.protocol}://${req.get('host')}`;
-
-    res.render('products' ,{
+    const user = req.session.user;
+    res.render('products' ,{ user: req.session.user,
       status: 'success',
       payload: result.docs,
       totalPages: result.totalPages,

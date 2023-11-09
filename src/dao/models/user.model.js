@@ -6,8 +6,7 @@ const UserModel = mongoose.model('users', new mongoose.Schema({
     last_name: String,
     age: Number,
     email: String,
-    password: String,
-    role: String
+    password: String
 }))
 mongoose.set("strictQuery", false)
 

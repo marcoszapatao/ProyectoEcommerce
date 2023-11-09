@@ -59,7 +59,8 @@ app.use('/carts', (req, res, next) => {
 app.use("/session", sessionRouter)
 //Pagina de Inicio
 app.get('/', (req, res) => {
-    res.render('index', { title: 'Mi Página de Inicio' }); 
+    //res.render('index', { title: 'Mi Página de Inicio' }); 
+    res.redirect('/session/login'); 
 });
 
 //Socket

@@ -1,3 +1,9 @@
+{{#if user}}
+  <h2>Bienvenido/a, {{user.first_name}} {{user.last_name}} {{user.email}} {{user.role}}</h2>
+{{/if}}
+<a href="/session/logout">Cerrar Sesión</a>
+<a href="/session/profile">Perfil</a>
+
 <h1>Lista de Productos</h1>
 
 {{#if payload.length}}
