@@ -16,7 +16,7 @@ import {Server} from 'socket.io';
 
 //Server
 const app = express();
-const mongoUrl = 'mongodb://127.0.0.1:27017/'
+const mongoUrl = 'mongodb+srv://MZ:ihUAzMShnaWlbPhP@clustermz.xmhba2n.mongodb.net/'
 const mongoDBName = 'ecommerce'
 const server = app.listen(8080,()=>console.log('listening on port 8080'));
 
