@@ -1,6 +1,7 @@
 import { Router } from "express";
 import UserModel from "../dao/models/user.model.js";
 import { isLoggedIn } from '../isLoggedIn.js';
+import passport from "passport";
 
 const router = Router();
 const ADMIN_EMAIL = "adminCoder@coder.com";
@@ -10,47 +11,72 @@ router.get('/register', (req, res) => {
     res.render('sessions/register')
 })
 
-router.post('/register', async(req, res) =>{
-    try {
-        const user = req.body;
-        await UserModel.create(user);
-        res.redirect('/session/login'); 
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
+// router.post('/register', async(req, res) =>{
+//     try {
+//         const user = req.body;
+//         await UserModel.create(user);
+//         res.redirect('/session/login'); 
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+// })
+router.post('/register', passport.authenticate('register', { failureRedirect: '/session/failRegister' }), async(req, res) => {
+    res.redirect('/session/login')
 })
+
+router.get('/failRegister', (req, res) => res.send({ error: 'Failed' }))
 
 // Vista de Login
 router.get('/login', (req, res) => {
     res.render('sessions/login')
 })
 
-router.post('/login', async(req, res) =>{
-    try {
-        const { email, password } = req.body;
+// router.post('/login', async(req, res) =>{
+//     try {
+//         const { email, password } = req.body;
 
-        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-            req.session.user = { email, role: 'admin' };
-            return res.redirect('/products');
-        } 
-        const user = await UserModel.findOne({ email, password });
-        if (!user) {
-            return res.redirect('/session/login');
-        }
-        //req.session.user = { user, role: 'usuario' };;
-        req.session.user = { 
-            id: user._id, 
-            first_name: user.first_name, 
-            last_name: user.last_name,
-            email: user.email, 
-            role: 'usuario'
-        };
-        res.redirect('/products');
-    } catch (error) {
-        res.status(500).send(error.message);
+//         if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+//             req.session.user = { email, role: 'admin' };
+//             return res.redirect('/products');
+//         } 
+//         const user = await UserModel.findOne({ email, password });
+//         if (!user) {
+//             return res.redirect('/session/login');
+//         }
+//         //req.session.user = { user, role: 'usuario' };;
+//         req.session.user = { 
+//             id: user._id, 
+//             first_name: user.first_name, 
+//             last_name: user.last_name,
+//             email: user.email, 
+//             role: 'usuario'
+//         };
+//         res.redirect('/products');
+//     } catch (error) {
+//         res.status(500).send(error.message);
+//     }
+
+// })
+router.post('/login', passport.authenticate('login', { failureRedirect: '/session/failLogin' }), async(req, res) => {
+    if (!req.user) {
+        return res.status(400).send({ status: 'erorr', error: 'Invalid credentials' })
     }
+    const { email, password } = req.body;
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        req.session.user = { email, role: 'admin' };
+        return res.redirect('/products');
+    } 
+    req.session.user = { 
+        id: req.user._id, 
+        first_name: req.user.first_name, 
+        last_name: req.user.last_name,
+        email: req.user.email, 
+        role: 'usuario'
+        };
 
+    res.redirect('/products')
 })
+router.get('/failLogin', (req, res) => res.send({ error: 'Failed' }))
 
 
 router.get('/profile', isLoggedIn, async (req, res) => {
@@ -58,6 +84,7 @@ router.get('/profile', isLoggedIn, async (req, res) => {
         const userId = req.session.user.id;
         const user = await UserModel.findById(userId).select('-password'); 
         if (!user) {
+            console.log(user)
             return res.redirect('/session/login');
         }
         res.render('sessions/profile', {

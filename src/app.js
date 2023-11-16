@@ -12,6 +12,8 @@ import productRoutes from './routes/products.router.js';
 import cartRoutes from './routes/carts.router.js';
 import sessionRouter from './routes/session.router.js';
 import {Server} from 'socket.io';
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 
 
 //Server
@@ -39,6 +41,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
+//Inicializo passport
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 //Instancias
 //const productManager = new ProductManager('Products.json');
 //const cartManager = new CartManager('Carts.json');
