@@ -99,6 +99,29 @@ router.get('/profile', isLoggedIn, async (req, res) => {
     }
 });
 
+router.get(
+    '/login-github',
+    passport.authenticate('github', { scope: ['user:email'] }),
+    async (req, res) => {}
+)
+
+router.get(
+    '/githubcallback',
+    passport.authenticate('github', { failureRedirect: '/session/login' }),
+    async (req, res) => {
+        console.log('Callback: ', req.user)
+        req.session.user = { 
+            id: req.user._id, 
+            first_name: req.user.first_name, 
+            last_name: req.user.last_name,
+            email: req.user.email, 
+            role: 'usuario'
+        };
+        console.log(req.session)
+        res.redirect('/products')
+    }
+)
+
 // Cerrar Session
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
