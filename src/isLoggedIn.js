@@ -1,11 +1,14 @@
+import passport from 'passport';
+
 function isLoggedIn(req, res, next) {
-    if (req.session && req.session.user) {
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+        if (err || !user) {
+
+            return res.redirect('/session/login');
+        }
+        req.user = user;
         return next();
-    } else {
-        console.log(req.session.user)
-        console.log(req.session)
-        res.redirect('/session/login');
-    }
+    })(req, res, next);
 }
 
 export { isLoggedIn };

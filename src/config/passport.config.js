@@ -1,15 +1,23 @@
 import passport from "passport";
 import local from 'passport-local'
+import passportJWT from 'passport-jwt'
 import GutHubStrategy from "passport-github2";
 import UserModel from "../dao/models/user.model.js";
-import { createHash, isValidPassword } from "../utils.js";
+import CartModel from "../dao/models/carts.model.js";
+import { createHash, generateToken ,isValidPassword } from "../utils.js";
 
 const LocalStratey = local.Strategy
+const JWTStrategy = passportJWT.Strategy
+const extractCookie = req => {
+    return (req && req.cookies) ? req.cookies['cookieJWT'] : null
+}
+
 const initializePassport = () => {
 
     passport.use('register', new LocalStratey({
         passReqToCallback: true,
-        usernameField: 'email'
+        usernameField: 'email',
+        session: false 
     }, async(req, username, password, done) => {
         const { first_name, last_name, age, email } = req.body
         try {
@@ -18,12 +26,15 @@ const initializePassport = () => {
                 console.log('User already exists')
                 return done(null, false)
             }
+            const newCart = await CartModel.create({ products: [] });
             const newUser = {
-                first_name, last_name, age, email, password: createHash(password)
+                first_name, last_name, age, email, password: createHash(password), cart: newCart._id, role: 'user'
             }
             const result = await UserModel.create(newUser)
             return done(null, result)
-        } catch(err) {}
+        } catch(err) {
+            return done('Error to register'+ err)
+        }
     }))
 
     passport.use('login', new LocalStratey({
@@ -38,8 +49,13 @@ const initializePassport = () => {
 
             if(!isValidPassword(user, password)) return done(null, false)
 
+            const token = generateToken(user)
+            user.token = token
+
             return done(null, user)
-        } catch(err) {}
+        } catch(err) {
+            return done('Error to login '+err)
+        }
     }))
 
     passport.use('github', new GutHubStrategy(
@@ -56,16 +72,20 @@ const initializePassport = () => {
                     console.log('User already exists')
                     return done(null, user)
                 }
-
+                const newCart = await CartModel.create({ products: [] });
                 const newUser = {
                     first_name: profile._json.name,
                     last_name: '',
                     age: 0,
                     email: profile._json.email,
-                    password: ''
-
+                    password: '',
+                    cart: newCart._id,
+                    role: 'user'
                 }
                 const result = await UserModel.create(newUser)
+
+                const token = generateToken(user)
+                user.token = token
 
                 return done(null, result)
             }catch (error){
@@ -73,6 +93,23 @@ const initializePassport = () => {
             }
         }
     ))
+    
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([extractCookie]),
+        secretOrKey: 'secretForJWT',
+    }, async (jwt_payload, done) => {
+        console.log("JWT Payload:", jwt_payload._id);
+        try {
+            const user = await UserModel.findById(jwt_payload.user._id);
+            console.log('user en jwt: '+user)
+            if (!user) {
+                return done(null, false);
+            }
+            return done(null, user);
+        } catch (error) {
+            return done(error, false);
+        }
+    }))
 
     passport.serializeUser((user, done) => {
         done(null, user._id)

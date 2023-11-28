@@ -3,6 +3,7 @@ import handlebars from 'express-handlebars';
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser'
 import __dirname from './utils.js';
 //import ProductManager from './dao/fileSystem/ProductManager.js'; 
 //import CartManager from './dao/fileSystem/CartManager.js'; 
@@ -31,16 +32,24 @@ app.use(express.static(__dirname+'/public'));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
+/* Reemplazo por estrategia JWT */
+// app.use(session({
+//     store: MongoStore.create({
+//         mongoUrl,
+//         dbName: mongoDBName,
+//         ttl: 100
+//     }),
+//     secret: 'secret',
+//     resave: false,
+//     saveUninitialized: false
+// }))
 app.use(session({
-    store: MongoStore.create({
-        mongoUrl,
-        dbName: mongoDBName,
-        ttl: 100
-    }),
     secret: 'secret',
-    resave: false,
-    saveUninitialized: false
+    resave: true,
+    saveUninitialized: true
 }))
+app.use(cookieParser())
+
 //Inicializo passport
 initializePassport()
 app.use(passport.initialize())
@@ -65,7 +74,6 @@ app.use('/carts', (req, res, next) => {
 app.use("/session", sessionRouter)
 //Pagina de Inicio
 app.get('/', (req, res) => {
-    //res.render('index', { title: 'Mi Página de Inicio' }); 
     res.redirect('/session/login'); 
 });
 

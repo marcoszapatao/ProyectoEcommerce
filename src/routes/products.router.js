@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+import { isLoggedIn } from '../isLoggedIn.js';
 //import ProductManager from '../dao/fileSystem/ProductManager.js'; 
 import productsDao from '../dao/productsDao.js'; 
 import Product from '../dao/models/products.model.js';
@@ -18,7 +19,7 @@ router.get('/realtimeproducts', async (req, res) => {
     res.render('realTimeProducts', { products });
 });
 
-router.get('/', async (req, res) => {
+router.get('/' ,isLoggedIn,async (req, res) => {
   const { limit = 10, page = 1, sort, query, category, available } = req.query;
   
   let sortOptions = {};
@@ -49,8 +50,8 @@ router.get('/', async (req, res) => {
 
     const result = await Product.paginate(filterOptions, options);
     const baseUrl = `${req.protocol}://${req.get('host')}`;
-    const user = req.session.user;
-    res.render('products' ,{ user: req.session.user,
+    const user = req.user.toObject();
+    res.render('products' ,{ user,
       status: 'success',
       payload: result.docs,
       totalPages: result.totalPages,
