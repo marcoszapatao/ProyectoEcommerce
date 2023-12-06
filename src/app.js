@@ -23,9 +23,6 @@ const app = express();
 const PORT = config.PORT
 const mongoUrl = config.MONGO_URL
 const mongoDBName = config.MONGO_DBNAME
-//const mongoUrl = 'mongodb+srv://MZ:ihUAzMShnaWlbPhP@clustermz.xmhba2n.mongodb.net/'
-//const mongoDBName = 'ecommerce'
-//const server = app.listen(8080,()=>console.log('listening on port 8080'));
 const server = app.listen(PORT,()=>console.log(`Running on port (${PORT})🏃 ...`));
 
 //Configuración de Handlebars

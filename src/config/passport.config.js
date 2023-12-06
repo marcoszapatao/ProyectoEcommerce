@@ -61,10 +61,8 @@ const initializePassport = () => {
 
     passport.use('github', new GutHubStrategy(
         {
-            //clientID: 'Iv1.45047513c887f8d7',
             clientID: config.GITHUB_CLIENT_ID,
             clientSecret: config.GITHUB_CLIENT_SECRET,
-            //clientSecret: '844db22ecbee7aebed8be25e70d124ea3905c19c',
             callbackURL: 'http://localhost:8080/session/githubcallback'
             
 
@@ -101,7 +99,6 @@ const initializePassport = () => {
     
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([extractCookie]),
-        //secretOrKey: 'secretForJWT',
         secretOrKey: config.JWT_SECRET,
     }, async (jwt_payload, done) => {
         console.log("JWT Payload:", jwt_payload._id);
