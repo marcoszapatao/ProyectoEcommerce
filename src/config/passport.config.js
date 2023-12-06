@@ -4,6 +4,7 @@ import passportJWT from 'passport-jwt'
 import GutHubStrategy from "passport-github2";
 import UserModel from "../dao/models/user.model.js";
 import CartModel from "../dao/models/carts.model.js";
+import config from './config.js';
 import { createHash, generateToken ,isValidPassword } from "../utils.js";
 
 const LocalStratey = local.Strategy
@@ -60,9 +61,13 @@ const initializePassport = () => {
 
     passport.use('github', new GutHubStrategy(
         {
-            clientID: 'Iv1.45047513c887f8d7',
-            clientSecret: '844db22ecbee7aebed8be25e70d124ea3905c19c',
+            //clientID: 'Iv1.45047513c887f8d7',
+            clientID: config.GITHUB_CLIENT_ID,
+            clientSecret: config.GITHUB_CLIENT_SECRET,
+            //clientSecret: '844db22ecbee7aebed8be25e70d124ea3905c19c',
             callbackURL: 'http://localhost:8080/session/githubcallback'
+            
+
         },
         async (accessToken, refreshToken, profile, done) => {
             console.log(profile)
@@ -96,7 +101,8 @@ const initializePassport = () => {
     
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([extractCookie]),
-        secretOrKey: 'secretForJWT',
+        //secretOrKey: 'secretForJWT',
+        secretOrKey: config.JWT_SECRET,
     }, async (jwt_payload, done) => {
         console.log("JWT Payload:", jwt_payload._id);
         try {

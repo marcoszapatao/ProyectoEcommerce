@@ -4,6 +4,7 @@ import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser'
+import config from './config/config.js';
 import __dirname from './utils.js';
 //import ProductManager from './dao/fileSystem/ProductManager.js'; 
 //import CartManager from './dao/fileSystem/CartManager.js'; 
@@ -19,9 +20,13 @@ import initializePassport from "./config/passport.config.js";
 
 //Server
 const app = express();
-const mongoUrl = 'mongodb+srv://MZ:ihUAzMShnaWlbPhP@clustermz.xmhba2n.mongodb.net/'
-const mongoDBName = 'ecommerce'
-const server = app.listen(8080,()=>console.log('listening on port 8080'));
+const PORT = config.PORT
+const mongoUrl = config.MONGO_URL
+const mongoDBName = config.MONGO_DBNAME
+//const mongoUrl = 'mongodb+srv://MZ:ihUAzMShnaWlbPhP@clustermz.xmhba2n.mongodb.net/'
+//const mongoDBName = 'ecommerce'
+//const server = app.listen(8080,()=>console.log('listening on port 8080'));
+const server = app.listen(PORT,()=>console.log(`Running on port (${PORT})🏃 ...`));
 
 //Configuración de Handlebars
 app.engine('handlebars',handlebars.engine());
@@ -44,7 +49,7 @@ app.use(express.urlencoded({extended:true}));
 //     saveUninitialized: false
 // }))
 app.use(session({
-    secret: 'secret',
+    secret: config.SESSION_SECRET,
     resave: true,
     saveUninitialized: true
 }))
