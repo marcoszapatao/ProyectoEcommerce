@@ -70,7 +70,11 @@ const initializePassport = () => {
         async (accessToken, refreshToken, profile, done) => {
             console.log(profile)
             try{
-                const user = await UserModel.findOne({email: profile._json.email})
+                let email = profile._json.email && profile._json.email[0].value;
+                 if (!email) {
+                    email = `${profile._json.username}@github.com`;
+                }
+                const user = await UserModel.findOne({email: email})
                 if(user){
                     console.log('User already exists')
                     return done(null, user)
@@ -80,7 +84,7 @@ const initializePassport = () => {
                     first_name: profile._json.name,
                     last_name: '',
                     age: 0,
-                    email: profile._json.email,
+                    email: email,
                     password: '',
                     cart: newCart._id,
                     role: 'user'
