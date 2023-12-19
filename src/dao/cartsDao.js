@@ -1,6 +1,6 @@
 import Cart from './models/carts.model.js';
 
-class CartsDao {
+export default class CartsDao {
     async addCart() {
         try {
             let newCart = new Cart();
@@ -125,4 +125,4 @@ class CartsDao {
 
 }
 
-export default new CartsDao();
+//export default new CartsDao();

@@ -13,10 +13,11 @@ import cartsDao from './dao/cartsDao.js';
 import productRoutes from './routes/products.router.js';
 import cartRoutes from './routes/carts.router.js';
 import sessionRouter from './routes/session.router.js';
+import userRouter from './routes/user.router.js';
 import {Server} from 'socket.io';
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-
+import ProductRepository from './services/products.repository.js';
 
 //Server
 const app = express();
@@ -74,12 +75,14 @@ app.use('/carts', (req, res, next) => {
     next();
 }, cartRoutes);
 app.use("/session", sessionRouter)
+app.use("/user", userRouter)
 //Pagina de Inicio
 app.get('/', (req, res) => {
     res.redirect('/session/login'); 
 });
 
 //Socket
+const UserService = new ProductRepository(new productsDao())
 const io = new Server(server);
 io.on('connection', socket => {
     console.log('Cliente conectado');
@@ -91,7 +94,7 @@ io.on('connection', socket => {
         try{
             console.log(data);
             //const newProduct = productManager.addProduct(data);
-            const newProduct = await productsDao.addProduct(data);
+            const newProduct = await UserService.addProduct(data);
             io.emit('product-added', newProduct);
         } catch (error) {
             console.error("Error al añadir producto:", error);
@@ -102,7 +105,7 @@ io.on('connection', socket => {
     socket.on('delete-product', async productId => {
         //productManager.deleteProduct(productId);
         try{
-            await productsDao.deleteProduct(productId);
+            await UserService.deleteProduct(productId);
             io.emit('product-deleted', productId);
         }catch(error){
             console.error("Error al eliminar producto:", error);

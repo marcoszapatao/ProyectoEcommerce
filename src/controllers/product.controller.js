@@ -1,8 +1,12 @@
-import productsDao from '../dao/productsDao.js'; 
 import Product from '../dao/models/products.model.js';
 
+import ProductRepository from '../services/products.repository.js';
+import ProductDao from '../dao/productsDao.js'
+
+const ProductService = new ProductRepository(new ProductDao())
+
 export const getAllProducts = async (req, res) => {
-    const products = await productsDao.getAllProducts();
+    const products = await ProductService.getAllProducts();
     res.render('realTimeProducts', { products });
 };
 
@@ -61,7 +65,7 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
     const productId = req.params.pid;
-    const product = await productsDao.getProductById(productId); 
+    const product = await ProductService.getProductById(productId); 
     if (product) {
         res.json(product);
     } else {
@@ -71,7 +75,7 @@ export const getProductById = async (req, res) => {
 
 export const addProduct = async (req, res) => {
     const { title, description, code, price, stock, category, thumbnails } = req.body;
-    const newProduct = await productsDao.addProduct({ title, description, code, price, stock, category, thumbnails });
+    const newProduct = await ProductService.addProduct({ title, description, code, price, stock, category, thumbnails });
     if(newProduct){
         res.json({ message: 'Producto agregado exitosamente.', product: newProduct });
     } else {
@@ -82,7 +86,7 @@ export const addProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
     const productId = parseInt(req.params.pid);
     const updatedProductData = req.body;
-    const result = await productsDao.updateProduct(productId, updatedProductData);
+    const result = await ProductService.updateProduct(productId, updatedProductData);
     if(result){
         res.json({ message: 'Producto actualizado exitosamente.' });
     } else {
@@ -93,7 +97,7 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
     const productId = parseInt(req.params.pid);
-    const result = await productsDao.deleteProduct(productId);
+    const result = await ProductService.deleteProduct(productId);
     if(result){
         res.json({ message: `Producto con ID: ${productId} ha sido eliminado.` });
     } else {

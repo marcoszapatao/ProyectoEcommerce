@@ -1,7 +1,8 @@
 import Product from './models/products.model.js';
 
- class ProductsDao {
-  async addProduct({ title, description, code, price, stock, category, thumbnails }) {
+export default class ProductsDao {
+  
+  addProduct = async ({ title, description, code, price, stock, category, thumbnails }) => {
     try {
       const productExists = await Product.findOne({ code });
       if (productExists) {
@@ -29,14 +30,6 @@ import Product from './models/products.model.js';
   async getAllProducts() {
     return await Product.find({}).lean();
   }
-
-  // async getAllProductsPag({  limit = 10, page = 1 }) {
-  //   try {
-  //     return await Product.find({}).lean().paginate({}, { page, limit, lean:true });
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
 
   async getProductById(id) {
     try {
@@ -77,4 +70,4 @@ import Product from './models/products.model.js';
   }
 }
 
-export default new ProductsDao();
+//export default new ProductsDao();
