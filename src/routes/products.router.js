@@ -1,14 +1,16 @@
 import express from 'express';
+import passport from 'passport';
 const router = express.Router();
 import { isLoggedIn } from '../isLoggedIn.js';
 import { getAllProducts, getProducts , getProductById, addProduct, updateProduct, deleteProduct} from '../controllers/product.controller.js';
+import authorize from '../authMiddleware.js';
 
-router.get('/realtimeproducts', getAllProducts);
+router.get('/realtimeproducts', passport.authenticate('jwt', { session: false }), authorize('admin'), getAllProducts);
 router.get('/' ,isLoggedIn, getProducts);
 router.get('/:pid', getProductById);
-router.post('/', addProduct);
-router.put('/:pid', updateProduct);
-router.delete('/:pid', deleteProduct);
+router.post('/', authorize('admin'), addProduct);
+router.put('/:pid', authorize('admin'), updateProduct);
+router.delete('/:pid', authorize('admin'), deleteProduct);
 
 
 

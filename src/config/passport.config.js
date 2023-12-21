@@ -29,7 +29,7 @@ const initializePassport = () => {
             }
             const newCart = await CartModel.create({ products: [] });
             const newUser = {
-                first_name, last_name, age, email, password: createHash(password), cart: newCart._id, role: 'user'
+                first_name, last_name, age, email, password: createHash(password), cart: newCart._id, role: 'admin'
             }
             const result = await UserModel.create(newUser)
             return done(null, result)
@@ -105,7 +105,7 @@ const initializePassport = () => {
         jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([extractCookie]),
         secretOrKey: config.JWT_SECRET,
     }, async (jwt_payload, done) => {
-        console.log("JWT Payload:", jwt_payload._id);
+        console.log("JWT Payload:", jwt_payload.user._id);
         try {
             const user = await UserModel.findById(jwt_payload.user._id);
             console.log('user en jwt: '+user)

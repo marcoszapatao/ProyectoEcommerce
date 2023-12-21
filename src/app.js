@@ -6,8 +6,6 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser'
 import config from './config/config.js';
 import __dirname from './utils.js';
-//import ProductManager from './dao/fileSystem/ProductManager.js'; 
-//import CartManager from './dao/fileSystem/CartManager.js'; 
 import productsDao from './dao/productsDao.js';
 import cartsDao from './dao/cartsDao.js';
 import productRoutes from './routes/products.router.js';
@@ -57,15 +55,8 @@ app.use(cookieParser())
 initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
-//Instancias
-//const productManager = new ProductManager('Products.json');
-//const cartManager = new CartManager('Carts.json');
-// const productsDao = new ProductsDao();
-// const cartsDao = new CartsDao();
 
 //Routes
-//app.use('/products', productRoutes);
-//app.use('/carts', cartRoutes);
 app.use('/products', (req, res, next) => {
     req.productsDao = productsDao;
     next();
@@ -82,20 +73,19 @@ app.get('/', (req, res) => {
 });
 
 //Socket
-const UserService = new ProductRepository(new productsDao())
+const ProductService = new ProductRepository(new productsDao())
 const io = new Server(server);
-io.on('connection', socket => {
+io.on('connection', async socket => {
     console.log('Cliente conectado');
     socket.on('disconnect', () => {
         console.log('Un usuario se desconectó');
     });
-    
+
     socket.on('add-product', async data => {
         try{
-            console.log(data);
-            //const newProduct = productManager.addProduct(data);
-            const newProduct = await UserService.addProduct(data);
+            const newProduct = await ProductService.addProduct(data);
             io.emit('product-added', newProduct);
+
         } catch (error) {
             console.error("Error al añadir producto:", error);
         }
@@ -103,9 +93,8 @@ io.on('connection', socket => {
     });
 
     socket.on('delete-product', async productId => {
-        //productManager.deleteProduct(productId);
         try{
-            await UserService.deleteProduct(productId);
+            await ProductService.deleteProduct(productId);
             io.emit('product-deleted', productId);
         }catch(error){
             console.error("Error al eliminar producto:", error);

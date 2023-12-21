@@ -35,8 +35,31 @@
 
 <script>
 
+const tokenJWT = localStorage.getItem('tokenJWT');
 
 function addToCart(productId) {
+    fetch(`/carts/add-product/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokenJWT}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('No se pudo añadir el producto al carrito.');
+        }
+        return response.json();
+    })
+    .then(() => {
+        alert("Producto añadido al carrito correctamente.");
+    })
+    .catch(error => {
+        console.error('Error al añadir el producto al carrito:', error);
+    });
+}
+
+{{!-- function addToCart(productId) {
     let cartId = getCurrentCartId();
     if (!cartId) {
         fetch('/carts', {
@@ -78,7 +101,7 @@ function addToCart(productId) {
             console.error('Error al añadir el producto al carrito:', error);
         });
     }
-}
+} --}}
 
 function getCurrentCartId() {
     return localStorage.getItem('currentCartId');

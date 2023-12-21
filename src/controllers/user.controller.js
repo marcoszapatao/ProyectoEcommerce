@@ -1,6 +1,7 @@
 import passport from "passport";
 import UserRepository from '../services/users.repository.js';
 import UserDao from '../dao/usersDao.js'
+import { userToDto } from '../dto/user.dto.js';
 
 const UserService = new UserRepository(new UserDao())
 
@@ -39,9 +40,8 @@ export const profile = async (req, res) => {
 
 export const current = (req, res) => {
     try {
-        const userData = req.user.toObject();
-        delete userData.password;
-        res.render('sessions/current', { user: userData });
+        const userDto = userToDto(req.user);
+        res.render('sessions/current', { user: userDto });
     } catch (error) {
         console.error('Error al obtener la información del usuario:', error);
         res.status(500).send('Error interno del servidor');
