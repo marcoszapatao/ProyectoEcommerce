@@ -2,9 +2,15 @@ import cartsDao from '../dao/cartsDao.js';
 import CartRepository from '../services/carts.repository.js';
 import userDao from '../dao/usersDao.js';
 import userRepository from '../services/users.repository.js';
+import productDao from '../dao/productsDao.js';
+import productRepository from '../services/products.repository.js';
+import ticketDao from '../dao/ticketsDao.js';
+import ticketRepository from '../services/tickets.repository.js';
 
 const CartService = new CartRepository(new cartsDao())
 const UserService = new userRepository(new userDao())
+const ProductService = new productRepository(new productDao())
+const TicketService = new ticketRepository(new ticketDao())
 
 export const getCartById = async (req, res) => {
     const cartId = req.params.cid;
@@ -93,5 +99,46 @@ export const clearCart = async (req, res) => {
         res.json({ message: "Todos los productos han sido eliminados del carrito" });
     } else {
         res.status(404).json({ error: "No se pudieron eliminar los productos del carrito" });
+    }
+};
+
+export const purchaseCart = async (req, res) => {
+    const cartId = req.params.cid;
+    const cart = await CartService.getCartById(cartId);
+    let totalAmount = 0;
+    const userId = req.user._id;
+    const user = await UserService.getUserById(userId);
+    const email = user.email;
+    if (!cart) {
+        return res.status(404).json({ error: "Carrito no encontrado" });
+    }
+    const products = cart.products;
+    let successfulProducts = [];
+    let failedProducts = [];
+    for (const item of products) {
+        if (item.quantity <= item.product.stock) {
+           successfulProducts.push(item.product._id);
+           await ProductService.updateProductStock(item.product._id, item.product.stock - item.quantity);
+           totalAmount += item.product.price * item.quantity;
+        } else {
+          failedProducts.push({ _id: item.product._id, quantity: item.quantity });
+        }
+    }
+
+    const ticketData = {
+        amount: totalAmount,
+        purchaser: email
+    };
+
+    if (successfulProducts.length > 0) {
+        await TicketService.createTicket(ticketData);
+    }
+    if (failedProducts.length < cart.products.length) {
+        await CartService.updateCartProducts(cartId, failedProducts);
+    }
+    if (failedProducts.length > 0) {
+        return res.status(400).json({ error: "Productos no disponibles", ids: failedProducts });
+    } else {
+        return res.json({ message: "Compra completada con éxito" });
     }
 };

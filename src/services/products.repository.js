@@ -10,6 +10,6 @@ export default class ProductRepository {
     getProductById = async (id) => { return await this.dao.getProductById(id) }
     updateProduct = async (id, updateData) => { return await this.dao.updateProduct(id, updateData) }
     deleteProduct = async (id) => { return await this.dao.deleteProduct(id) }
-
+    updateProductStock = async (id, stock) => { return await this.dao.updateProductStock(id, stock) }
 
 }

@@ -68,6 +68,21 @@ export default class ProductsDao {
       throw error;
     }
   }
+
+  async updateProductStock(id, stock) {
+    try {
+      const updatedProduct = await Product.findByIdAndUpdate(id, { stock }, { new: true });
+      if (!updatedProduct) {
+        throw new Error("Producto no encontrado.");
+      }
+      console.log('Stock del producto actualizado correctamente');
+      return updatedProduct;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
+
+
 
 //export default new ProductsDao();

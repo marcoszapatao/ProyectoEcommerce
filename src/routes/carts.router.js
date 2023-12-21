@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 const router = express.Router();
-import { getCartById, addCart, addProductToCart, removeProductFromCart, updateCartProducts, updateProductQuantityInCart, clearCart, addProductToCartWithoutCartID} from '../controllers/carts.controller.js';
+import { getCartById, addCart, addProductToCart, removeProductFromCart, updateCartProducts, updateProductQuantityInCart, clearCart, addProductToCartWithoutCartID, purchaseCart} from '../controllers/carts.controller.js';
 import authorize from '../authMiddleware.js';
 
 router.get('/:cid', getCartById);
@@ -13,6 +13,6 @@ router.put('/:cid/product/:pid', updateProductQuantityInCart);
 router.delete('/:cid', clearCart);
 
 router.post('/add-product/:pid', passport.authenticate('jwt', { session: false }), addProductToCartWithoutCartID);
-
+router.post('/:cid/purchase', passport.authenticate('jwt', { session: false }), purchaseCart)
 export default router;
 
