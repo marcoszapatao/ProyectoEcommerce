@@ -16,6 +16,7 @@ import {Server} from 'socket.io';
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import ProductRepository from './services/products.repository.js';
+import { addLogger } from './utils/logger.js'
 
 //Server
 const app = express();
@@ -32,6 +33,8 @@ app.use(express.static(__dirname+'/public'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
+app.use(addLogger)
 
 /* Reemplazo por estrategia JWT */
 // app.use(session({
@@ -71,6 +74,18 @@ app.use("/user", userRouter)
 app.get('/', (req, res) => {
     res.redirect('/session/login'); 
 });
+// Ruta /loggerTest
+app.get('/loggerTest', (req, res) => {
+    req.logger.debug('Este es un mensaje de debug');
+    req.logger.http('Este es un mensaje de http');
+    req.logger.info('Este es un mensaje de info');
+    req.logger.warning('Este es un mensaje de warning');
+    req.logger.error('Este es un mensaje de error');
+    req.logger.fatal('Este es un mensaje de fatal');
+  
+    res.send('Mensajes de log generados en /loggerTest');
+  });
+
 
 //Socket
 const ProductService = new ProductRepository(new productsDao())
