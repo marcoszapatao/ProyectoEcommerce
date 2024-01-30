@@ -17,6 +17,8 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import ProductRepository from './services/products.repository.js';
 import { addLogger } from './utils/logger.js'
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express'
 
 //Server
 const app = express();
@@ -35,6 +37,20 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.use(addLogger)
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentacion de Ecommerce',
+            description: 'Este proyecto es un ecommerce'
+        }
+    },
+    apis: [`${__dirname}/../docs/**/*.yaml`]
+}
+
+const specs = swaggerJSDoc(swaggerOptions)
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 /* Reemplazo por estrategia JWT */
 // app.use(session({
