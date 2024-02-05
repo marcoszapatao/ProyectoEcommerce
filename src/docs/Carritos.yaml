@@ -15,32 +15,14 @@ paths:
         "500":
           description: Error interno del Server. Query defectuoso de la DB
     post:
-      summary: Crear Producto
+      summary: Crear Carrito
       tags:
-        - Products
+        - Carts
       requestBody:
         required: true
         content:
           application/json:
             schema:
-  /products/{uid}:
-    get:
-      summary: Obtiene un producto por ID
-      tags:
-        - Products
-      parameters:
-      - name: uid
-        in: path
-        required: true
-        description: ID del producto que se solicita
-        schema:
-          $type: string
-      responses:
-        "200":
-          description: La producto fue devueltao satisfactoriamente
-        "500":
-          description: Error interno del server
-        "404":
-          description: No se encontro el producto
+
 
         

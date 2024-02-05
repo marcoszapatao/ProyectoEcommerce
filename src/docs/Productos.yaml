@@ -6,7 +6,7 @@ paths:
         - Products
       responses:
         "200":
-          description: Las mascotas fueron devueltas safistactoriamente
+          description: Las productos fueron devueltas safistactoriamente
           content:
             application/json:
               schema:
@@ -24,7 +24,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#components/requestBodies/insertPet'
+              $ref: 
   /products/{uid}:
     get:
       summary: Obtiene un producto por ID
