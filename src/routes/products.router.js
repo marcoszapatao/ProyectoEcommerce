@@ -8,7 +8,8 @@ import authorize from '../authMiddleware.js';
 router.get('/realtimeproducts', passport.authenticate('jwt', { session: false }), authorize('admin'), getAllProducts);
 router.get('/' ,isLoggedIn, getProducts);
 router.get('/:pid', getProductById);
-router.post('/', authorize('admin'), addProduct);
+//router.post('/', authorize('admin'), addProduct);
+router.post('/', addProduct);
 router.put('/:pid', authorize('admin'), updateProduct);
 router.delete('/:pid', authorize('admin'), deleteProduct);
 
