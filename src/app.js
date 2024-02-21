@@ -12,6 +12,7 @@ import productRoutes from './routes/products.router.js';
 import cartRoutes from './routes/carts.router.js';
 import sessionRouter from './routes/session.router.js';
 import userRouter from './routes/user.router.js';
+import chatRouter from './routes/chat.router.js';
 import {Server} from 'socket.io';
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -86,6 +87,7 @@ app.use('/carts', (req, res, next) => {
 }, cartRoutes);
 app.use("/session", sessionRouter)
 app.use("/user", userRouter)
+app.use("/chat", chatRouter)
 //Pagina de Inicio
 app.get('/', (req, res) => {
     res.redirect('/session/login'); 
@@ -106,6 +108,7 @@ app.get('/loggerTest', (req, res) => {
 //Socket
 const ProductService = new ProductRepository(new productsDao())
 const io = new Server(server);
+const messages = [];
 io.on('connection', async socket => {
     console.log('Cliente conectado');
     socket.on('disconnect', () => {
@@ -131,6 +134,11 @@ io.on('connection', async socket => {
             console.error("Error al eliminar producto:", error);
         }
     });
+
+    socket.on('message', data => {
+        messages.push(data)
+        io.emit('messageLogs', messages)
+    })
 
 });
 
