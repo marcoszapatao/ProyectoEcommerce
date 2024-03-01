@@ -4,7 +4,7 @@ const router = express.Router();
 import { getCartById, addCart, addProductToCart, removeProductFromCart, updateCartProducts, updateProductQuantityInCart, clearCart, addProductToCartWithoutCartID, purchaseCart} from '../controllers/carts.controller.js';
 import authorize from '../authMiddleware.js';
 
-router.get('/:cid', getCartById);
+router.get('/:cid', passport.authenticate('jwt', { session: false }), getCartById);
 router.post('/', addCart);
 router.post('/:cid/product/:pid', authorize('user'),addProductToCart);
 router.delete('/:cid/product/:pid', removeProductFromCart);

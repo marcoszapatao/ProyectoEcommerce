@@ -1,8 +1,9 @@
 {{#if user}}
-  <h2>Bienvenido/a, {{user.first_name}} {{user.last_name}} {{user.email}} {{user.role}}</h2>
+  <h2>Bienvenido/a, {{user.first_name}} {{user.last_name}} {{user.email}} {{user.role}} {{user.cart}}</h2>
 {{/if}}
 <a href="/session/logout">Cerrar Sesión</a>
 <a href="/user/profile">Perfil</a>
+<a href="/carts/{{user.cart}}">Ver Carrito Original</a>
 
 <h1>Lista de Productos</h1>
 
@@ -57,58 +58,6 @@ function addToCart(productId) {
     .catch(error => {
         console.error('Error al añadir el producto al carrito:', error);
     });
-}
-
-{{!-- function addToCart(productId) {
-    let cartId = getCurrentCartId();
-    if (!cartId) {
-        fetch('/carts', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('No se pudo crear un nuevo carrito.');
-            }
-            return response.json();
-        })
-        .then(newCart => {
-            setCurrentCartId(newCart._id); 
-            return addToCart(productId); 
-        })
-        .catch(error => {
-            console.error('Error al crear un nuevo carrito:', error);
-        });
-    } else {
-        fetch(`/carts/${cartId}/product/${productId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('No se pudo añadir el producto al carrito.');
-            }
-            return response.json();
-        })
-        .then(() => {
-            alert("Producto añadido al carrito correctamente.");
-        })
-        .catch(error => {
-            console.error('Error al añadir el producto al carrito:', error);
-        });
-    }
-} --}}
-
-function getCurrentCartId() {
-    return localStorage.getItem('currentCartId');
-}
-
-function setCurrentCartId(cartId) {
-    localStorage.setItem('currentCartId', cartId);
 }
 
 

@@ -16,9 +16,35 @@ export const getCartById = async (req, res) => {
     const cartId = req.params.cid;
     const cart = await CartService.getCartById(cartId);
     if (cart) {
-        res.render('carts', { cart: cart.toObject() });;
+        const total = await calculateCartTotal(cartId);
+        res.render('carts', { cart: cart.toObject(), total: total });;
+        //res.json(cart.toObject());
     } else {
         res.status(404).render('error', { error: 'Carrito no encontrado' });
+    }
+};
+
+// Función para calcular el total del carrito
+export const calculateCartTotal = async (cartId) => {
+    try {
+        const cart = await CartService.getCartById(cartId);
+        console.log('Carrito en controller',cart);
+        if (!cart) {
+            throw new Error('Carrito no encontrado');
+        }
+
+        let total = 0;
+        for (const item of cart.products) {
+            const product = item.product;
+            const quantity = item.quantity;
+            const productDetails = await ProductService.getProductById(product._id);
+            const productPrice = productDetails.price;
+
+            total += productPrice * quantity;
+        }
+        return total;
+    } catch (error) {
+        throw new Error(`Error al calcular el total del carrito: ${error.message}`);
     }
 };
 

@@ -16,6 +16,7 @@ export default class CartsDao {
     async getCartById(id) {
         try {
             const cart = await Cart.findById(id).populate('products.product');
+            console.log(cart)
             return cart || null;
         } catch (error) {
             console.error("Carrito no encontrado:", error);
