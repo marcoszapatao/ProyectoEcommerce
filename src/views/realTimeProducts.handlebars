@@ -3,12 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <title>Productos en Tiempo Real</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        #product-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #product-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #product-list li:last-child {
+            border-bottom: none;
+        }
+
+        .delete-product {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .delete-product:hover {
+            background-color: #c82333;
+        }
+
+        #add-product-form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #add-product-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #add-product-form button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #add-product-form button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
 <ul id="product-list">
     {{#each products}}
-        <li data-id="{{this._id}}">{{this.title}} - {{this.price}} - <button class="delete-product" data-id="{{this._id}}">Eliminar</button></li>
+        <li data-id="{{this._id}}">
+            {{this.title}} - {{this.price}}
+            <button class="delete-product" data-id="{{this._id}}">Eliminar</button>
+        </li>
     {{/each}}
 </ul>
 
@@ -21,6 +93,7 @@
     <input type="text" id="category" placeholder="Categoria">
     <button type="submit">Agregar Producto</button>
 </form>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
     const socket = io();
@@ -55,9 +128,6 @@
         const li = document.querySelector(`li[data-id="${productId}"]`);
         if(li) li.remove();
     });
-
-
-
 </script>
 
 </body>

@@ -1,46 +1,110 @@
-<h1>Carrito {{ cart._id }}</h1>
-
-{{#if cart.products}}
-  <ul>
-    {{#each cart.products}}
-      <li>
-        Producto: {{this.product.title}} - Cantidad: {{this.quantity}} - Precio: {{this.product.price}}
-      </li>
-    {{/each}}
-  </ul>
-  <p>Total: {{total}}</p>
-{{else}}
-  <p>El carrito está vacío.</p>
-{{/if}}
-<button id="buyButton">Ir a Pagar</button>
-
-<script>
-  const tokenJWT = localStorage.getItem('tokenJWT');
-  document.getElementById('buyButton').addEventListener('click', function() {
-    const cartId = '{{ cart._id }}'; 
-    fetch(`/carts/${cartId}/purchase`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${tokenJWT}` 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
         }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al realizar la compra.');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log(data.message); 
-        if (data.ticket) {
-          window.location.href = `/ticket/${data.ticket._id}`;
-        }
-    })
-    .catch(error => {
-        console.error('Error al realizar la compra:', error);
-        alert('No se pudo completar la compra. Inténtalo de nuevo más tarde.');
-    });
-});
 
-</script>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Carrito {{ cart._id }}</h1>
+
+        {{#if cart.products}}
+          <ul>
+            {{#each cart.products}}
+              <li>
+                Producto: {{this.product.title}} - Cantidad: {{this.quantity}} - Precio: {{this.product.price}}
+              </li>
+            {{/each}}
+          </ul>
+          <p>Total: {{total}}</p>
+        {{else}}
+          <p>El carrito está vacío.</p>
+        {{/if}}
+        <button id="buyButton">Ir a Pagar</button>
+    </div>
+
+    <script>
+        const tokenJWT = localStorage.getItem('tokenJWT');
+        document.getElementById('buyButton').addEventListener('click', function() {
+            const cartId = '{{ cart._id }}'; 
+            fetch(`/carts/${cartId}/purchase`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenJWT}` 
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al realizar la compra.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data.message); 
+                if (data.ticket) {
+                    window.location.href = `/ticket/${data.ticket._id}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error al realizar la compra:', error);
+                alert('No se pudo completar la compra. Inténtalo de nuevo más tarde.');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,64 +1,153 @@
-{{#if user}}
-  <h2>Bienvenido/a, {{user.first_name}} {{user.last_name}} {{user.email}} {{user.role}} {{user.cart}}</h2>
-{{/if}}
-<a href="/session/logout">Cerrar Sesión</a>
-<a href="/user/profile">Perfil</a>
-<a href="/carts/{{user.cart}}">Ver Carrito Original</a>
-
-<h1>Lista de Productos</h1>
-
-{{#if payload.length}}
-  <ul>
-      {{#each payload}}
-      <li>
-          <h2>{{title}}</h2>
-          <p>Descripción: {{description}}</p>
-          <p>Precio: ${{price}}</p>
-          <button onclick="addToCart('{{_id}}')">Agregar al Carrito</button>
-          <a href="/products/{{_id}}">Ver Más</a>
-      </li>
-      {{/each}}
-  </ul>
-
-  <!-- Paginación -->
-  <div>
-      {{#if hasPrevPage}}
-          <a href="{{prevLink}}">Página Anterior</a>
-      {{/if}}
-      <span>Página {{page}} de {{totalPages}}</span>
-      {{#if hasNextPage}}
-          <a href="{{nextLink}}">Página Siguiente</a>
-      {{/if}}
-  </div>
-{{else}}
-  <p>No se encontraron productos.</p>
-{{/if}}
-
-<script>
-
-const tokenJWT = localStorage.getItem('tokenJWT');
-
-function addToCart(productId) {
-    fetch(`/carts/add-product/${productId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${tokenJWT}`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('No se pudo añadir el producto al carrito.');
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        return response.json();
-    })
-    .then(() => {
-        alert("Producto añadido al carrito correctamente.");
-    })
-    .catch(error => {
-        console.error('Error al añadir el producto al carrito:', error);
-    });
-}
 
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-</script>
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {{#if user}}
+            <h2>Bienvenido/a, {{user.first_name}} {{user.last_name}}</h2>
+            <p>Email: {{user.email}}</p>
+            <p>Rol: {{user.role}}</p>
+            <a href="/user/profile">Perfil</a>
+            <a href="/session/logout">Cerrar Sesión</a>
+            <br>
+            <a href="/carts/{{user.cart}}">Ver Carrito</a>
+        {{/if}}
+        
+        <h1>Lista de Productos</h1>
+
+        {{#if payload.length}}
+            <ul>
+                {{#each payload}}
+                    <li>
+                        <h2>{{title}}</h2>
+                        <p>Descripción: {{description}}</p>
+                        <p>Precio: ${{price}}</p>
+                        <button onclick="addToCart('{{_id}}')">Agregar al Carrito</button>
+                        <a href="/products/{{_id}}">Ver Más</a>
+                    </li>
+                {{/each}}
+            </ul>
+
+            <!-- Paginación -->
+            <div class="pagination">
+                {{#if hasPrevPage}}
+                    <a href="{{prevLink}}">Página Anterior</a>
+                {{/if}}
+                <span>Página {{page}} de {{totalPages}}</span>
+                {{#if hasNextPage}}
+                    <a href="{{nextLink}}">Página Siguiente</a>
+                {{/if}}
+            </div>
+        {{else}}
+            <p>No se encontraron productos.</p>
+        {{/if}}
+    </div>
+
+    <script>
+        const tokenJWT = localStorage.getItem('tokenJWT');
+
+        function addToCart(productId) {
+            fetch(`/carts/add-product/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenJWT}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No se pudo añadir el producto al carrito.');
+                }
+                return response.json();
+            })
+            .then(() => {
+                alert("Producto añadido al carrito correctamente.");
+            })
+            .catch(error => {
+                console.error('Error al añadir el producto al carrito:', error);
+            });
+        }
+    </script>
+</body>
+</html>
