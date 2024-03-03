@@ -4,6 +4,7 @@ export default class TicketRepository {
     }
 
     createTicket = async (purchaseData) => { return await this.dao.createTicket(purchaseData) }
+    getTicketById = async (id) => { return await this.dao.getTicketById(id) }
 
 
 }

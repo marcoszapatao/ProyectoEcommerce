@@ -12,4 +12,35 @@
 {{else}}
   <p>El carrito está vacío.</p>
 {{/if}}
-<button id="buyButton">Comprar</button>
+<button id="buyButton">Ir a Pagar</button>
+
+<script>
+  const tokenJWT = localStorage.getItem('tokenJWT');
+  document.getElementById('buyButton').addEventListener('click', function() {
+    const cartId = '{{ cart._id }}'; 
+    fetch(`/carts/${cartId}/purchase`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokenJWT}` 
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al realizar la compra.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.message); 
+        if (data.ticket) {
+          window.location.href = `/ticket/${data.ticket._id}`;
+        }
+    })
+    .catch(error => {
+        console.error('Error al realizar la compra:', error);
+        alert('No se pudo completar la compra. Inténtalo de nuevo más tarde.');
+    });
+});
+
+</script>

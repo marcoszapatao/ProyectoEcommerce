@@ -6,11 +6,15 @@ import productDao from '../dao/productsDao.js';
 import productRepository from '../services/products.repository.js';
 import ticketDao from '../dao/ticketsDao.js';
 import ticketRepository from '../services/tickets.repository.js';
+import nodemailer from 'nodemailer';
+import config from '../config/config.js';
 
 const CartService = new CartRepository(new cartsDao())
 const UserService = new userRepository(new userDao())
 const ProductService = new productRepository(new productDao())
 const TicketService = new ticketRepository(new ticketDao())
+
+//const stripe = new Stripe(config.STRIPE_SECRET_KEY);
 
 export const getCartById = async (req, res) => {
     const cartId = req.params.cid;
@@ -128,6 +132,16 @@ export const clearCart = async (req, res) => {
     }
 };
 
+// Configuración del transporter para Nodemailer
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    port: 587,
+    auth: {
+        user: config.MAIL,
+        pass: config.PASSMAIL
+    }
+});
+
 export const purchaseCart = async (req, res) => {
     const cartId = req.params.cid;
     const cart = await CartService.getCartById(cartId);
@@ -155,16 +169,83 @@ export const purchaseCart = async (req, res) => {
         amount: totalAmount,
         purchaser: email
     };
-
-    if (successfulProducts.length > 0) {
-        await TicketService.createTicket(ticketData);
-    }
     if (failedProducts.length < cart.products.length) {
         await CartService.updateCartProducts(cartId, failedProducts);
     }
+
+    const ticket = await TicketService.createTicket(ticketData);
+
+    const mailOptions = {
+        from: config.MAIL,
+        to: email,
+        subject: 'Detalle del Ticket de Compra',
+        text: `Aquí está el detalle de tu ticket de compra:\n\nNúmero de Ticket: ${ticket._id}\nMonto: ${ticket.amount}\n\nGracias por tu compra.`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error al enviar el correo electrónico:', error);
+        } else {
+            console.log('Correo electrónico enviado:', info.response);
+        }
+    });
+
     if (failedProducts.length > 0) {
         return res.status(400).json({ error: "Productos no disponibles", ids: failedProducts });
     } else {
-        return res.json({ message: "Compra completada con éxito" });
+        return res.json({ message: "Compra completada con éxito", ticket: ticket});
     }
 };
+
+
+// export const paymentCart = async (req, res) => {
+//     const cartId = req.params.cid;
+//     const cart = await CartService.getCartById(cartId);
+//     if (!cart) {
+//         return res.status(404).json({ error: "Carrito no encontrado" });
+//     }
+//     const total = await calculateCartTotal(cartId);
+
+//     const data = {
+//         amount: total,
+//         currency: 'usd',
+//         payment_method_types: ['card']
+//     }
+
+//     try {
+//         const paymentIntent  = await stripe.paymentIntents.create(data);
+//         console.log("ACA IMPRIMO EL PAYMENT INTENT: ",{ paymentIntent  });
+//         res.json({ clientSecret: paymentIntent.client_secret });
+//         //res.send({ status: 'success', payload: result })
+//         //res.render('paymentForm'); 
+//     } catch (error) {
+//         console.error('Error al iniciar el pago:', error);
+//         res.status(500).json({ error: "Error al iniciar el pago" });
+//     }
+// }
+
+// export const processPayment = async (req, res) => {
+//     const cartId = req.params.cid;
+//     const { cardNumber, expiryDate, cvc, amount, currency } = req.body;
+
+//     try {
+//         const paymentIntentId = req.body.paymentIntentId;
+//         const paymentIntent = await stripe.paymentIntents.confirm(paymentIntentId, {
+//             payment_method_data: {
+//                 card: {
+//                     number: cardNumber,
+//                     exp_month: expiryDate.month,
+//                     exp_year: expiryDate.year,
+//                     cvc: cvc
+//                 }
+//             }
+//         });
+//         // - Actualizar el estado del pedido a "Pagado"
+//         // - Enviar un correo electrónico de confirmación al usuario
+//         // - Redirigir al usuario a una página de éxito de pago
+//         res.status(200).json({ message: 'Pago completado con éxito' });
+//     } catch (error) {
+//         console.error('Error al procesar el pago:', error);
+//         res.status(500).json({ error: 'Error al procesar el pago' });
+//     }
+// }

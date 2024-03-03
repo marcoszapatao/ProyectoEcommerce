@@ -9,5 +9,8 @@ export default {
     SESSION_SECRET: process.env.SESSION_SECRET,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    JWT_SECRET: process.env.JWT_SECRET
+    JWT_SECRET: process.env.JWT_SECRET,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    MAIL: process.env.MAIL,
+    PASSMAIL: process.env.PASSMAIL
 }

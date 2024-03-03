@@ -19,4 +19,5 @@ export default class Ticket {
             throw error;
         }
     }
+    getTicketById = async (id) => { return await TicketsModel.findById(id) }
 }

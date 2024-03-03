@@ -1,0 +1,51 @@
+
+<h1>Ingresa los datos de tu tarjeta</h1>
+<form id="paymentForm">
+    <div>
+        <label for="cardNumber">Número de Tarjeta:</label>
+        <input type="text" id="cardNumber" name="cardNumber" required>
+    </div>
+    <div>
+        <label for="expiryDate">Fecha de Expiración:</label>
+        <input type="text" id="expiryDate" name="expiryDate" required>
+    </div>
+    <div>
+        <label for="cvc">CVC:</label>
+        <input type="text" id="cvc" name="cvc" required>
+    </div>
+    <button type="submit">Pagar</button>
+</form>
+
+<script>
+const tokenJWT = localStorage.getItem('tokenJWT');
+document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const cardNumber = document.getElementById('cardNumber').value;
+    const expiryDate = document.getElementById('expiryDate').value;
+    const cvc = document.getElementById('cvc').value;
+    const paymentData = {
+        cardNumber,
+        expiryDate,
+        cvc
+    };
+    try {
+        const cartId = '{{ cart._id }}'; 
+        const response = await fetch(`/carts/${cartId}/process-payment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(paymentData)
+        });
+        if (!response.ok) {
+            throw new Error('Error al procesar el pago');
+        }
+        window.location.href = '/payment/success';
+    } catch (error) {
+        console.error('Error al procesar el pago:', error);
+        alert('Error al procesar el pago. Inténtalo de nuevo más tarde.');
+    }
+});
+
+
+</script>

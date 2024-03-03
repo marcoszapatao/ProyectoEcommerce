@@ -13,6 +13,7 @@ import cartRoutes from './routes/carts.router.js';
 import sessionRouter from './routes/session.router.js';
 import userRouter from './routes/user.router.js';
 import chatRouter from './routes/chat.router.js';
+import ticketRouter from './routes/ticket.router.js';
 import {Server} from 'socket.io';
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -88,6 +89,7 @@ app.use('/carts', (req, res, next) => {
 app.use("/session", sessionRouter)
 app.use("/user", userRouter)
 app.use("/chat", chatRouter)
+app.use("/ticket", ticketRouter)
 //Pagina de Inicio
 app.get('/', (req, res) => {
     res.redirect('/session/login'); 
