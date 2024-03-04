@@ -8,7 +8,8 @@ const UserModel = mongoose.model('users', new mongoose.Schema({
     age: Number,
     password: { type: String},
     cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
-    role: { type: String, default: 'user' }
+    role: { type: String, default: 'user' },
+    lastActive: { type: Date, default: Date.now() }
 }))
 
 mongoose.set("strictQuery", false)

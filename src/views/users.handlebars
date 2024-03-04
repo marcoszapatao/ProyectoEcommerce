@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Usuarios</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each users}}
+                    <tr>
+                        <td>{{id}}</td>
+                        <td>{{firstName}}</td>
+                        <td>{{email}}</td>
+                        <td>{{role}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <button id="deleteInactiveUsersButton">Eliminar Usuarios Inactivos</button>
+    </div>
+    <script>
+        const deleteInactiveUsersButton = document.getElementById('deleteInactiveUsersButton');
+        deleteInactiveUsersButton.addEventListener('click', () => {
+            fetch('/user', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('tokenJWT')
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Usuarios inactivos eliminados correctamente.');
+                    alert("Usuarios inactivos eliminados correctamente. ");
+                } else {
+                    console.error('Error al eliminar usuarios inactivos:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar usuarios inactivos:', error);
+            });
+        });
+    </script>
+</body>
+</html>

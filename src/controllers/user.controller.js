@@ -19,18 +19,10 @@ export const register = (req, res, next) => {
 
 export const profile = async (req, res) => {
     try {
-        //const user = req.user;
         const user = await UserService.getUserById(req.user._id);
         if (!user) {
             return res.redirect('/session/login');
         }
-        // const userData = {
-        //     first_name: user.first_name,
-        //     last_name: user.last_name,
-        //     age: user.age,
-        //     email: user.email
-        // };
-        //res.render('sessions/profile', userData);
         res.render('sessions/profile', user.toObject());
     } catch (error) {
         console.error('Error al obtener la información del perfil:', error);
@@ -47,3 +39,25 @@ export const current = (req, res) => {
         res.status(500).send('Error interno del servidor');
     }
 };
+
+export const getAllUsers = async (req, res) => {
+    try{
+        const users = await UserService.getAllUsers();
+        const simplifiedUsers = users.map(user => userToDto(user));
+        res.render('users', { users: simplifiedUsers });
+    }catch (error){
+        console.error('Error al obtener los usuarios:', error);
+        res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
+
+};
+
+export const deleteInactiveUsers = async (req, res) => {
+    try{
+        const users = await UserService.deleteInactiveUsers();
+        res.json(users);
+    }catch (error){
+        console.error('Error al eliminar los usuarios inactivos:', error);
+        res.status(500).json({ error: 'Error al eliminar los usuarios inactivos' });
+    }
+}

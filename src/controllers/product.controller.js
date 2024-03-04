@@ -42,7 +42,8 @@ export const getProducts = async (req, res) => {
       const result = await Product.paginate(filterOptions, options);
       const baseUrl = `${req.protocol}://${req.get('host')}`;
       const user = req.user.toObject();
-      res.render('products' ,{ user,
+      const isAdmin = user.role === 'admin';
+      res.render('products' ,{ user, isAdmin,
         status: 'success',
         payload: result.docs,
         totalPages: result.totalPages,

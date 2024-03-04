@@ -1,6 +1,7 @@
 import passport from "passport";
 import { generateToken  } from "../utils.js";
 
+
 export const register = (req, res, next) => {
     passport.authenticate('register', (err, user, info) => {
         if (err) {
@@ -13,17 +14,17 @@ export const register = (req, res, next) => {
     })(req, res, next);
 };
 
-export const login = (req, res, next) => {
+export  const login =  (req, res, next) => {
     passport.authenticate('login', (err, user, info) => {
-      if (err) {
-        return res.status(500).json({ status: 'error', error: err.message });
-      }
-      if (!user) {
-        return res.status(400).json({ status: 'error', error: 'Invalid credentials' });
-      }
-      const token = user.token || generateToken(user);
-      res.cookie('cookieJWT', token, { httpOnly: true });
-      return res.redirect('/products');
+        if (err) {
+            return res.status(500).json({ status: 'error', error: err.message });
+        }
+        if (!user) {
+            return res.status(400).json({ status: 'error', error: 'Invalid credentials' });
+        }
+        const token = user.token || generateToken(user);
+        res.cookie('cookieJWT', token, { httpOnly: true });
+        return res.redirect('/products');
     })(req, res, next);
   };
 

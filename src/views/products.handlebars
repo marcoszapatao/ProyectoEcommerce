@@ -92,6 +92,10 @@
             <a href="/session/logout">Cerrar Sesión</a>
             <br>
             <a href="/carts/{{user.cart}}">Ver Carrito</a>
+            {{#if isAdmin}}
+                <a href="/user/">Ver usuarios</a>
+            {{/if}}
+
         {{/if}}
         
         <h1>Lista de Productos</h1>

@@ -6,6 +6,9 @@ import UserModel from "../dao/models/user.model.js";
 import CartModel from "../dao/models/carts.model.js";
 import config from './config.js';
 import { createHash, generateToken ,isValidPassword } from "../utils.js";
+import UserRepository from '../services/users.repository.js';
+import UserDao from '../dao/usersDao.js'
+const UserService = new UserRepository(new UserDao())
 
 const LocalStratey = local.Strategy
 const JWTStrategy = passportJWT.Strategy
@@ -52,7 +55,13 @@ const initializePassport = () => {
 
             const token = generateToken(user)
             user.token = token
-
+            // Actualizar la fecha de lastActive
+            try {
+                await UserService.updateLastLogin(user.id);
+            } catch (error) {
+                console.error('Error al actualizar lastActive:', error);
+                return res.status(500).json({ status: 'error', error: 'Failed to update lastActive' });
+            }
             return done(null, user)
         } catch(err) {
             return done('Error to login '+err)
