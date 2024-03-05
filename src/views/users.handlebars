@@ -54,6 +54,7 @@
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Rol</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,7 +63,19 @@
                         <td>{{id}}</td>
                         <td>{{firstName}}</td>
                         <td>{{email}}</td>
-                        <td>{{role}}</td>
+                        <td>
+                            <!-- Campo de selección para el rol -->
+                            <select id="roleSelect-{{id}}">
+                                <option value="admin">Admin</option>
+                                <option value="user">Usuario</option>
+                            </select>
+                        </td>
+                        <td>
+                            <!-- Botón para modificar el rol -->
+                            <button onclick="changeRole('{{this.id}}')">Modificar Rol</button>
+                            <!-- Botón para eliminar el usuario -->
+                            <button onclick="deleteUser('{{id}}')">Eliminar</button>
+                        </td>
                     </tr>
                 {{/each}}
             </tbody>
@@ -70,12 +83,14 @@
         <button id="deleteInactiveUsersButton">Eliminar Usuarios Inactivos</button>
     </div>
     <script>
+        const tokenJWT = localStorage.getItem('tokenJWT');
         const deleteInactiveUsersButton = document.getElementById('deleteInactiveUsersButton');
+
         deleteInactiveUsersButton.addEventListener('click', () => {
             fetch('/user', {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('tokenJWT')
+                    'Authorization': `Bearer ${tokenJWT}`
                 }
             })
             .then(response => {
@@ -90,6 +105,51 @@
                 console.error('Error al eliminar usuarios inactivos:', error);
             });
         });
+
+        function deleteUser(userId) {
+            fetch(`/user/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${tokenJWT}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log(`Usuario ${userId} eliminado correctamente.`);
+                    alert(`Usuario ${userId} eliminado correctamente.`);
+                } else {
+                    console.error(`Error al eliminar el usuario ${userId}:`, response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error(`Error al eliminar el usuario ${userId}:`, error);
+            });
+        }
+
+        function changeRole(userId) {
+            const roleSelect = document.getElementById(`roleSelect-${userId}`);
+            const newRole = roleSelect.value;
+
+            fetch(`/user/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokenJWT}`
+                },
+                body: JSON.stringify({ role: newRole })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log(`Rol del usuario ${userId} modificado correctamente.`);
+                    alert(`Rol del usuario ${userId} modificado correctamente.`);
+                } else {
+                    console.error(`Error al modificar el rol del usuario ${userId}:`, response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error(`Error al modificar el rol del usuario ${userId}:`, error);
+            });
+        }
     </script>
 </body>
 </html>

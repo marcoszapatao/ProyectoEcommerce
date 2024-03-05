@@ -61,3 +61,24 @@ export const deleteInactiveUsers = async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar los usuarios inactivos' });
     }
 }
+
+export const deleteUser = async (req, res) => {
+    const userId = req.params.uid;
+    const result = await UserService.deleteUser(userId);
+    if(result){
+        res.json({ message: `Usuario con ID: ${userId} ha sido eliminado.` });
+    } else {
+        res.status(404).json({ error: 'Usuario no encontrado para eliminar' });
+    }
+};
+
+export const updateUser = async (req, res) => {
+    const userId = req.params.uid;
+    const newRole = req.body.role;
+    const result = await UserService.updateUser(userId, { role: newRole });
+    if(result){
+        res.json({ message: 'Usuario actualizado exitosamente.' });
+    } else {
+        res.status(404).json({ error: 'Usuario no encontrado para actualizar' });
+    }
+};
