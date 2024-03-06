@@ -23,6 +23,7 @@ export  const login =  (req, res, next) => {
             return res.status(400).json({ status: 'error', error: 'Invalid credentials' });
         }
         const token = user.token || generateToken(user);
+        console.log(token);
         res.cookie('cookieJWT', token, { httpOnly: true });
         return res.redirect('/products');
     })(req, res, next);

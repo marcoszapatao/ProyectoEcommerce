@@ -46,6 +46,7 @@ const initializePassport = () => {
     }, async(username, password, done) => {
         try {
             const user = await UserModel.findOne({ email: username })
+            console.log('User en passsport ',user)
             if (!user) {
                 console.log('User doesnot exists')
                 return done(null, false)
@@ -72,9 +73,9 @@ const initializePassport = () => {
         {
             clientID: config.GITHUB_CLIENT_ID,
             clientSecret: config.GITHUB_CLIENT_SECRET,
-            callbackURL: 'http://localhost:8080/session/githubcallback'
+            //callbackURL: 'http://localhost:8080/session/githubcallback'
+            callbackURL: 'https://proyectoecommerce-production.up.railway.app/session/githubcallback'
             
-
         },
         async (accessToken, refreshToken, profile, done) => {
             console.log(profile)
