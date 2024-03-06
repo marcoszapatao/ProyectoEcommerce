@@ -24,7 +24,7 @@ import swaggerUiExpress from 'swagger-ui-express'
 
 //Server
 const app = express();
-const PORT = config.PORT
+const PORT = config.PORT || 8080;
 const mongoUrl = config.MONGO_URL
 const mongoDBName = config.MONGO_DBNAME
 const server = app.listen(PORT,()=>console.log(`Running on port (${PORT})🏃 ...`));
