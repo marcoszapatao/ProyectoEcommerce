@@ -21,6 +21,9 @@ import ProductRepository from './services/products.repository.js';
 import { addLogger } from './utils/logger.js'
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express'
+import cors from 'cors'
+
+
 
 //Server
 const app = express();
@@ -37,6 +40,8 @@ app.use(express.static(__dirname+'/public'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
+app.use(cors());
 
 app.use(addLogger)
 
