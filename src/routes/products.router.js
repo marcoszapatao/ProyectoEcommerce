@@ -6,8 +6,8 @@ import { getAllProducts, getProducts , getProductById, addProduct, updateProduct
 import authorize from '../authMiddleware.js';
 
 router.get('/realtimeproducts', passport.authenticate('jwt', { session: false }), authorize('admin'), getAllProducts);
-//router.get('/' ,isLoggedIn, getProducts);
-router.get('/' , getProducts);
+router.get('/' ,isLoggedIn, getProducts);
+//router.get('/' , getProducts);
 router.get('/:pid', getProductById);
 router.post('/', authorize('admin'), addProduct);
 router.put('/:pid', authorize('admin'), updateProduct);
