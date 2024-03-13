@@ -46,7 +46,6 @@ const initializePassport = () => {
     }, async(username, password, done) => {
         try {
             const user = await UserModel.findOne({ email: username })
-            console.log('User en passsport ',user)
             if (!user) {
                 console.log('User doesnot exists')
                 return done(null, false)
@@ -115,10 +114,8 @@ const initializePassport = () => {
         jwtFromRequest: passportJWT.ExtractJwt.fromExtractors([extractCookie]),
         secretOrKey: config.JWT_SECRET,
     }, async (jwt_payload, done) => {
-        console.log("JWT Payload:", jwt_payload.user._id);
         try {
             const user = await UserModel.findById(jwt_payload.user._id);
-            console.log('user en jwt: '+user)
             if (!user) {
                 return done(null, false);
             }
